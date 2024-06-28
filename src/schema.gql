@@ -1,0 +1,273 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type UserDeviceDetail {
+  _id: ID!
+  deviceToken: String!
+  deviceType: String!
+}
+
+type Address {
+  _id: ID!
+  streetAndArea: String!
+  landmark: String
+  state: String!
+  city: String!
+  pinCode: Float!
+  businessPhoneNumber: Float
+  createdAt: DateScalar!
+  updatedAt: DateScalar!
+}
+
+type UserBusinessDetail {
+  shopName: String
+  addressIds: [Address!]!
+}
+
+type ProductSize {
+  sizeCode: String
+  quantity: Int
+}
+
+type ProductSpecification {
+  _id: ID!
+  material: String
+  platingType: String
+  design: String
+  size: [ProductSize!]
+  color: String
+}
+
+type Category {
+  _id: ID!
+  categoryName: String!
+  categoryImage: String!
+  productIds: [Product!]!
+  createdAt: DateScalar!
+  updatedAt: DateScalar!
+}
+
+type Product {
+  _id: ID!
+  productName: String!
+  productCode: String!
+  description: String!
+  price: Float!
+  images: [String!]!
+  categoryId: Category!
+  moq: Int!
+  specification: ProductSpecification
+  isProductCarted(userId: String!): Boolean!
+  createdAt: DateScalar!
+  updatedAt: DateScalar!
+}
+
+type CartItems {
+  productId: Product!
+  quantity: Int!
+}
+
+type Cart {
+  _id: ID!
+  userId: User!
+  cartItems: [CartItems!]!
+}
+
+type User {
+  _id: ID!
+  userName: String!
+  email: String
+  userType: String!
+  phoneNumber: Float!
+  deviceDetail: UserDeviceDetail!
+  businessDetail: UserBusinessDetail!
+  cartId: Cart!
+  accessToken: String!
+  refreshToken: String
+  createdAt: DateScalar!
+  updatedAt: DateScalar!
+}
+
+type StateCity {
+  countryCode: String!
+  stateCode: String!
+  name: String!
+}
+
+type CommonSuccessResponce {
+  code: Int!
+  message: String!
+}
+
+type Version {
+  version: String!
+  isAppActive: Boolean!
+  appStatus: String
+}
+
+type SearchResult {
+  _id: ID!
+  productName: String!
+}
+
+"""Formatted Date With custom scalar type"""
+scalar DateScalar
+
+type Query {
+  getAppVersionDetail(appVersionDTO: AppVersionDTO!): Version!
+  getAllAddresses(skip: Int!, take: Int! = 25): [Address!]!
+  countAddresses: Float!
+  getAddressByUserId(userId: String!): User!
+  signIn(phoneNumber: Float!): User!
+  getAllUsers(skip: Int!, take: Int! = 25): [User!]!
+  countUsers: Float!
+  getUserByPhoneNumber(phoneNumber: Float!): User!
+  getUserById(userId: String!): User!
+  getAllStates: [StateCity!]!
+  getAllCitiesByState(stateCode: String!): [StateCity!]!
+  getAllProducts(skip: Int!, take: Int! = 25): [Product!]!
+  countProducts: Float!
+  getProductById(productId: String!): Product!
+  getProductsByCategory(categoryId: String!): Category!
+  getAllCategories(skip: Int!, take: Int! = 25): [Category!]!
+  countCategories: Float!
+  getCategoryById(categoryId: String!): Category!
+  getCartByUserId(userId: String!): Cart!
+  searchProduct(searchInput: String!): [SearchResult!]!
+}
+
+input AppVersionDTO {
+  version: String!
+}
+
+type Mutation {
+  addAddress(addAddressDTO: AddressDTO!): CommonSuccessResponce!
+  updateAddress(addressId: String!, updateAddressDTO: UpdateAddressDTO!): CommonSuccessResponce!
+  deleteAddress(addressId: String!): CommonSuccessResponce!
+  signUp(registerUserDTO: RegisterUserDTO!, addressDTO: AddressDTO!): User!
+  updateExpiredAccessToken(refreshToken: String!): User!
+  updateUserDetails(userId: String!, updateUserDTO: UpdateUserDTO!): User!
+  addProduct(categoryId: String!, addProductDTO: ProductDTO!): CommonSuccessResponce!
+  updateProduct(productId: String!, updateProductDTO: UpdateProductDTO!): CommonSuccessResponce!
+  deleteProduct(productId: String!): CommonSuccessResponce!
+  addCategory(addCategoryDTO: CategoryDTO!): CommonSuccessResponce!
+  updateCategory(categoryId: String!, updateCategoryDTO: UpdateCategoryDTO!): CommonSuccessResponce!
+  deleteCategory(categoryId: String!): CommonSuccessResponce!
+  addProductToCart(cartItems: AddProductToCartDTO!): CommonSuccessResponce!
+  updateItemQuantityInCart(userId: String!, updateCartDTO: UpdateCartDTO!): CommonSuccessResponce!
+  removeProductFromCart(userId: String!, productId: String!): CommonSuccessResponce!
+}
+
+input AddressDTO {
+  streetAndArea: String!
+  landmark: String
+  state: String!
+  city: String!
+  pinCode: Float!
+  businessPhoneNumber: Float
+}
+
+input UpdateAddressDTO {
+  streetAndArea: String
+  landmark: String
+  state: String
+  city: String
+  pinCode: Float
+  businessPhoneNumber: Float
+}
+
+input RegisterUserDTO {
+  userName: String!
+  email: String
+  phoneNumber: Float!
+  businessDetail: UserBusinessDetailDTO!
+  deviceDetail: UserDeviceDetailDTO!
+}
+
+input UserBusinessDetailDTO {
+  shopName: String
+}
+
+input UserDeviceDetailDTO {
+  deviceToken: String!
+  deviceType: String!
+}
+
+input UpdateUserDTO {
+  userName: String
+  email: String
+  phoneNumber: Float
+  businessDetail: UserBusinessDetailDTO
+  deviceDetail: UserDeviceDetailDTO
+}
+
+input ProductDTO {
+  productName: String!
+  productCode: String!
+  description: String!
+  price: Float!
+  images: [String!]!
+  moq: Int!
+  specification: ProductSpecificationDTO
+}
+
+input ProductSpecificationDTO {
+  material: String
+  platingType: String
+  design: String
+  size: [ProductSizeDTO!]
+  color: String
+}
+
+input ProductSizeDTO {
+  sizeCode: String
+  quantity: Float
+}
+
+input UpdateProductDTO {
+  productName: String
+  productCode: String
+  description: String
+  price: Float
+  images: [String!]
+  moq: Int
+  specification: UpdateProductSpecificationDTO
+}
+
+input UpdateProductSpecificationDTO {
+  material: String
+  platingType: String
+  design: String
+  size: [UpdateProductSizeDTO!]
+  color: String
+}
+
+input UpdateProductSizeDTO {
+  sizeCode: String
+  quantity: Float
+}
+
+input CategoryDTO {
+  categoryName: String!
+  categoryImage: String!
+}
+
+input UpdateCategoryDTO {
+  categoryName: String
+  categoryImage: String
+}
+
+input AddProductToCartDTO {
+  userId: ID!
+  cartItems: [CartItemsDTO!]!
+}
+
+input CartItemsDTO {
+  productId: ID!
+  quantity: Int!
+}
+
+input UpdateCartDTO {
+  cartItems: [CartItemsDTO!]!
+}
