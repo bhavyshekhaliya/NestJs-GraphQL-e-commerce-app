@@ -1,7 +1,6 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { MongooseModule } from '@nestjs/mongoose';
 import { join } from 'path';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/authentication/auth.module';
@@ -44,22 +43,13 @@ import { ThrottlerGraphQLGruard } from './common/guards/throttlerGraphQL.guard';
       }
     }), 
 
-    /// MongoDB setup
-    MongooseModule.forRootAsync({
-      useFactory: async (configService: ConfigService) => ({        
-        uri: configService.get<string>('MONGODB_URI'),
-      }),
-      imports: [ ConfigModule ],
-      inject: [ ConfigService ],
-    }),
-
     /// Graphql setup
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
       useFactory: async (configService: ConfigService) => ({
          autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-         playground: configService.get<boolean>('GRAPHQL_PLAYGROUND'),
-         introspection: configService.get<string>('NODE_ENV') !== 'production',
+         playground: configService.getOrThrow<boolean>('GRAPHQL_PLAYGROUND'),
+         introspection: configService.getOrThrow<string>('NODE_ENV') !== 'production',
          context: ({ req, resp }) => ({ req, resp}),
          csrfPrevention: true,  
       }),
@@ -73,8 +63,8 @@ import { ThrottlerGraphQLGruard } from './common/guards/throttlerGraphQL.guard';
       inject: [ConfigService], 
       useFactory: async (configService: ConfigService) => [
         {  
-          ttl: configService.get<number>('THROTTLE_TTL'),
-          limit: configService.get<number>('THROTTLE_LIMIT'),
+          ttl: configService.getOrThrow<number>('THROTTLE_TTL'),
+          limit: configService.getOrThrow<number>('THROTTLE_LIMIT'),
         }
       ], 
     }),   

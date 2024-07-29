@@ -59,6 +59,7 @@ type Product {
   moq: Int!
   specification: ProductSpecification
   isProductCarted(userId: String!): Boolean!
+  isOutOfStock: Boolean!
   createdAt: DateScalar!
   updatedAt: DateScalar!
 }

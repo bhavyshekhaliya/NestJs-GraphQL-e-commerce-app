@@ -37,7 +37,7 @@ export class ProductSpecification {
 
     @Prop({ default: [] })
     @Field(() => [ ProductSize ], { nullable: true })
-    size?: [ ProductSize ]
+    size?: ProductSize[]
 
     @Prop({ default: null })
     @Field(() => String, { nullable: true })

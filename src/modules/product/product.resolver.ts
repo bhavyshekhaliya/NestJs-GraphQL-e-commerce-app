@@ -8,6 +8,7 @@ import { UseGuards } from "@nestjs/common";
 import { AccessTokenGuard } from "src/common/guards/accessToken.guard";
 import { UpdateProductDTO } from "./DTO/partialType/updateProduct.partialType";
 import { SkipThrottle } from "@nestjs/throttler";
+import { ProductSpecification } from "./schema/product.specification";
 
 @Resolver(() => Product)
 export class ProductResolver {
@@ -94,4 +95,22 @@ export class ProductResolver {
     ): Promise<boolean> {
         return this.productService.isProductCarted(userId,product);
     } 
+
+    /// Resolve field for isOutOfStock
+    @ResolveField('specification', () => ProductSpecification)
+    async specification(@Parent() product: Product): Promise<ProductSpecification> {
+        if (!product.specification) {
+            return null;
+        }
+
+        const updatedSizes = product.specification.size.map(size => ({
+            ...size,
+            isOutOfStock: (size.quantity ?? 0) >= product.moq
+        }));
+
+        return {
+            ...product.specification,
+            size: updatedSizes
+        };
+    }
 }

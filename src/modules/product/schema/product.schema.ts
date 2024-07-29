@@ -47,6 +47,9 @@ export class Product {
     @Field(() => Boolean)
     isProductCarted: boolean
 
+    @Field(() => Boolean)
+    isOutOfStock: boolean
+
     @Field(() => DateScalar)
     createdAt: Date
 
