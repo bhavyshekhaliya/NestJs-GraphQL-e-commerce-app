@@ -1,0 +1,38 @@
+version: '3.8' 
+
+services:
+  app: 
+    build: .
+    container_name: radhe_copar
+    ports:
+      - "2838:2838"
+    depends_on:
+      - mongo
+    environment:    
+      PORT: 2838
+      NODE_ENV: development
+      MONGODB_URI: mongodb+srv://user:mongoDB245@cluster0.kj55laa.mongodb.net/Radhe-Copar
+      GRAPHQL_PLAYGROUND: true
+      JWT_ACCESS_SECRET: xyzSecretKey
+      JWT_REFRESH_SECRET: xyzRefrshkey
+      THROTTLE_TTL: 6000
+      THROTTLE_LIMIT: 10
+    volumes:
+      - .:/usr/src/app  
+      - node_modules:/usr/src/app/node_modules
+
+
+  mongo: 
+    image: mongo
+    container_name: mongo
+    ports: 
+      - "27017:27017"    
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: mongoDB245  
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
+  node_modules:        
